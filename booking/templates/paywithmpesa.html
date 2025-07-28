@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>M-Pesa Payment</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f2f6ff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      background: #fff;
+      padding: 2.5rem;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+      width: 100%;
+      max-width: 450px;
+    }
+
+    .container h2 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.4rem;
+      font-weight: 600;
+      color: #444;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border: 1px solid #ccd;
+      border-radius: 8px;
+      outline: none;
+      transition: border 0.3s;
+    }
+
+    input:focus {
+      border-color: #007bff;
+    }
+
+    .btn-submit {
+      display: block;
+      width: 100%;
+      background-color: #28a745;
+      color: white;
+      font-weight: bold;
+      border: none;
+      padding: 0.9rem;
+      font-size: 1.05rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease-in-out;
+    }
+
+    .btn-submit:hover {
+      background-color: #218838;
+    }
+
+    .message {
+      text-align: center;
+      margin-top: 1rem;
+      font-size: 1rem;
+    }
+
+    .success {
+      color: green;
+    }
+
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Pay with M-Pesa</h2>
+
+    <form id="mpesaForm">
+      <div class="form-group">
+        <label for="phone">Phone Number (e.g. 254712345678)</label>
+        <input type="tel" id="phone" name="phone" required placeholder="Enter your Safaricom number" />
+      </div>
+
+      <div class="form-group">
+        <label for="amount">Amount (KES)</label>
+        <input type="number" id="amount" name="amount" required placeholder="Enter amount to pay" min="1"/>
+      </div>
+
+      <button type="submit" class="btn-submit">Initiate STK Push</button>
+    </form>
+
+    <div class="message" id="responseMessage"></div>
+  </div>
+
+  <script>
+    document.getElementById("mpesaForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const phone = document.getElementById("phone").value.trim();
+      const amount = document.getElementById("amount").value.trim();
+      const messageEl = document.getElementById("responseMessage");
+
+      if (!phone || !amount) {
+        messageEl.textContent = "Please fill all fields.";
+        messageEl.className = "message error";
+        return;
+      }
+
+      fetch("https://your-backend.com/api/stkpush", { // Replace with your endpoint
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ phone, amount })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.ResponseCode === "0") {
+          messageEl.textContent = "✅ STK Push sent! Check your phone.";
+          messageEl.className = "message success";
+        } else {
+          messageEl.textContent = "❌ Failed to initiate STK Push.";
+          messageEl.className = "message error";
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        messageEl.textContent = "❌ Error connecting to server.";
+        messageEl.className = "message error";
+      });
+    });
+  </script>
+
+</body>
+</html>

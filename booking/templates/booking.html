@@ -1,0 +1,421 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Booking Form</title>
+ <link rel="stylesheet" href="{% static 'booking/styles.css' %}">
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    label, select, input { display: block; margin: 10px 0; width: 100%; max-width: 400px; }
+    .hidden { display: none; }
+
+    /* Reset some default styles */
+body, h2, label, input, select, button {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Body Styling */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f4f7fa;
+  padding: 30px;
+  color: #333;
+}
+
+/* Title */
+h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #2c3e50;
+}
+
+/* Form Container */
+form {
+  background-color: #ffffff;
+  padding: 30px;
+  max-width: 600px;
+  margin: 0 auto;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* Label Styling */
+label {
+  font-weight: bold;
+  margin-top: 15px;
+  display: block;
+  color: #34495e;
+}
+
+/* Input and Select Styling */
+input[type="text"],
+input[type="email"],
+input[type="number"],
+input[type="date"],
+input[type="time"],
+select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #bdc3c7;
+  border-radius: 5px;
+  margin-top: 5px;
+  transition: border-color 0.3s ease;
+}
+
+input:focus,
+select:focus {
+  border-color: #3498db;
+  outline: none;
+}
+
+/* Button Styling */
+button[type="submit"],
+button[type="button"] {
+  background-color: #3498db;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 5px;
+  margin-top: 20px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #2980b9;
+}
+
+/* Sections */
+.form-group {
+  margin-bottom: 20px;
+}
+
+/* Mpesa and Confirmation sections */
+#mpesa-section,
+#confirmation-section {
+  margin-top: 15px;
+}
+
+/* Hidden class */
+.hidden {
+  display: none;
+}
+
+/* Fare styling */
+#fare {
+  background-color: #ecf0f1;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-top: 5px;
+}
+
+  </style>
+</head>
+
+
+
+  <!-- Top Contact Info Bar -->
+  <div class="top-contact-bar">
+    <div class="left-contact">
+      <i class="fas fa-envelope"></i> info@Pronghorntravels.co.ke
+      <i class="fas fa-phone"></i> +254 724 792140
+    </div>
+    <div class="right-icons">
+      <a href="#"><i class="fab fa-twitter"></i></a>
+      <a href="#"><i class="fab fa-facebook"></i></a>
+      <a href="#"><i class="fab fa-linkedin"></i></a>
+    </div>
+  </div>
+
+  <header class="main-header">
+    <div id="menuOverlay" class="overlay"></div>
+
+  <div class="logo">
+      <a href="{% url 'home' %}"></a>
+    <img src="{% static 'images/logo4.png' %}" alt="Sprintup Logo" />
+  </div>
+  <nav class="main-nav" id="navMenu">
+    <ul>
+      <li><a href="{% url 'home' %}" class="active">Home</a></li>
+      <li><a href="{% url 'about' %}">About Us</a></li>
+      <li><a href="{% url 'pricing' %}">Pricing</a></li>
+      <li><a href="{% url 'booking' %}">Booking</a></li>
+      <li><a href="{% url 'contactus' %}">Contact Us</a></li>
+    </ul>
+  </nav>
+  <div class="mobile-toggle" onclick="toggleMenu()">☰</div>
+</header><script>
+  function toggleMenu() {
+    const nav = document.getElementById("navMenu");
+    const overlay = document.getElementById("menuOverlay");
+    nav.classList.toggle("open");
+    overlay.classList.toggle("active");
+  }
+
+  // Close menu when link is clicked (on mobile)
+  document.querySelectorAll("#navMenu a").forEach(link => {
+    link.addEventListener("click", () => {
+      const nav = document.getElementById("navMenu");
+      const overlay = document.getElementById("menuOverlay");
+      nav.classList.remove("open");
+      overlay.classList.remove("active");
+    });
+  });
+</script><body>
+  <h2>Travel Booking</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.full_name.label_tag }} {{ form.full_name }}
+    {{ form.phone_number.label_tag }} {{ form.phone_number }}
+    {{ form.email.label_tag }} {{ form.email }}
+
+    {{ form.from_county.label_tag }} {{ form.from_county }}
+    {{ form.to_county.label_tag }} {{ form.to_county }}
+
+    <label for="id_category">Category</label>
+    <select name="category" id="id_category">
+      <option value="">Choose...</option>
+      <option value="Passenger">Passenger</option>
+      <option value="Parcel">Parcel</option>
+    </select>
+
+    <div id="passenger-fields" class="hidden">
+      <label for="id_num_passengers">Number of Passengers</label>
+      <input type="number" name="num_passengers" id="id_num_passengers" min="1" value="1">
+    </div>
+    <div id="parcel-fields" class="hidden">
+      <label for="id_parcel_weight">Weight of Parcel (kg)</label>
+      <input type="number" name="parcel_weight" id="id_parcel_weight" step="0.1">
+    </div>
+    <div class="form-group">
+  {{ form.departure_date.label_tag }}
+  {{ form.departure_date }}
+</div>
+
+<div class="form-group">
+  {{ form.departure_time.label_tag }}
+  {{ form.departure_time }}
+</div>
+
+<label for="id_car_type">Type of Car</label>
+<select name="car_type" id="id_car_type">
+  <option value="">Choose car type...</option>
+  <option value="Bus">Bus</option>
+  <option value="14 Seater">14 Seater</option>
+  <option value="Wish">Wish</option>
+  <option value="Noah">Noah</option>
+  <option value="Voxy">Voxy</option>
+</select>
+
+<!-- 
+    {{ form.departure_date.label_tag }} {{ form.departure_date }}
+    {{ form.departure_time.label_tag }} {{ form.departure_time }} -->
+
+    <label for="fare">Fare (KES)</label>
+    <input type="text" id="fare" readonly>
+
+    <div class="form-group">
+  <label for="id_payment_method">Payment Method</label>
+  {{ form.payment_method }}
+</div>
+
+<div class="form-group" id="mpesa-section" style="display:none;">
+  <label for="id_mpesa_number">Mpesa Number</label>
+  {{ form.mpesa_number }}
+  <button type="button" class="btn btn-warning mt-2" onclick="initiateMpesa()">Initiate Payment</button>
+  <p id="stk-message" style="color: green; display:none;">STK Push Sent... Awaiting confirmation</p>
+</div>
+
+<div class="form-group" id="confirmation-section" style="display:none;">
+  <label for="id_payment_code">Enter Confirmation Code</label>
+  {{ form.payment_code }}
+</div>
+
+
+    <button type="submit">Submit Booking</button>
+  </form>
+
+
+  
+  <!-- Footer -->
+<footer style="background-color: #002f6c; color: white; padding: 40px 0; font-family: Arial, sans-serif;">
+  <div style="max-width: 1200px; margin: auto; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 30px; padding: 0 20px;">
+    
+    <!-- About Column -->
+    <div style="flex: 1 1 300px;">
+      <h3 style="color: #ff8c00;">Pronghorn Travels</h3>
+      <p>
+        We provide safe and affordable travels,digitized booking services 
+        serving major towns and cities in Kenya such as Nairobi,Kisumu,Eldoret,Nakuru.
+      </p>
+      <p>
+       <br>
+        Your journey starts with us.
+      
+          <a href="{% url 'booking' %}" class="quote-btn">Ticket</a>
+
+      </p>
+    </div>
+
+    <ul style="list-style: none; padding: 0;">
+  <li><a href="{% url 'booking' %}#to=nairobi" style="color: white; text-decoration: none;">Nairobi</a></li>
+  <li><a href="{% url 'booking' %}#to=eldoret" style="color: white; text-decoration: none;">Eldoret</a></li>
+  <li><a href="{% url 'booking' %}#to=kisumu" style="color: white; text-decoration: none;">Kisumu</a></li>
+  <li><a href="{% url 'booking' %}#to=kericho" style="color: white; text-decoration: none;">Kericho</a></li>
+  <li><a href="{% url 'booking' %}#to=nakuru" style="color: white; text-decoration: none;">Nakuru</a></li>
+</ul>
+
+
+    <!-- Contact Info -->
+    <div style="flex: 1 1 250px;">
+      <h3 style="color: #ff8c00;">Pronghorn Travels Contact</h3>
+      <ul style="list-style: none; padding: 0;">
+        <li><i class="fas fa-map-marker-alt"></i> Nairobi, Kenya</li>
+        <li><i class="fas fa-phone"></i> <a href="tel:+254700123456" style="color: white; text-decoration: none;">+254 700 123456</a></li>
+        <li><i class="fas fa-envelope"></i> <a href="mailto:support@sprintup.co.ke" style="color: white; text-decoration: none;">support@sprintup.co.ke</a></li>
+        <li><i class="fas fa-clock"></i> Mon - Sun: 6:00 AM - 10:00 PM</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Footer Bottom -->
+  <div style="text-align: center; padding: 20px 0; background-color: #1a1a1a;">
+    <p style="margin: 0; font-size: 14px;">© 2025 Pronghorn Travels. All Rights Reserved. | Designed by <a href="#" style="color: #ff8c00; text-decoration: none;">Cheruiyot Ruto</a></p>
+  </div>
+
+  <!-- Back to Top -->
+  <a href="#top" style="position: fixed; bottom: 20px; right: 20px; background-color: #ff8c00; color: white; padding: 10px 12px; border-radius: 50%; text-decoration: none;">
+    <i class="fas fa-chevron-up"></i>
+  </a>
+</footer>
+<!-- WhatsApp Floating Button -->
+<!-- WhatsApp Floating Button (Place just before </body>) -->
+<a 
+  href="https://wa.me/254724792140?text=Hello%20Sprintup%20Services!" 
+  target="_blank" 
+  style="
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    background-color: #25D366;
+    color: white;
+    padding: 12px 14px;
+    border-radius: 50%;
+    font-size: 24px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+  "
+>
+  <i class="fab fa-whatsapp"></i>
+</a>
+
+  <script>
+    const categoryField = document.getElementById('id_category');
+    const passengerFields = document.getElementById('passenger-fields');
+    const parcelFields = document.getElementById('parcel-fields');
+    const fromCounty = document.getElementById('id_from_county');
+    const toCounty = document.getElementById('id_to_county');
+    const fareField = document.getElementById('fare');
+    const numPassengers = document.getElementById('id_num_passengers');
+
+    function updateVisibility() {
+      const category = categoryField.value;
+      if (category === 'Passenger') {
+        passengerFields.classList.remove('hidden');
+        parcelFields.classList.add('hidden');
+      } else if (category === 'Parcel') {
+        parcelFields.classList.remove('hidden');
+        passengerFields.classList.add('hidden');
+      } else {
+        passengerFields.classList.add('hidden');
+        parcelFields.classList.add('hidden');
+      }
+    }
+
+    function updateFare() {
+      const from = fromCounty.value;
+      const to = toCounty.value;
+      const category = categoryField.value;
+      const passengers = category === 'Passenger' ? parseInt(numPassengers.value || '1') : 1;
+
+      if (from && to && category) {
+        fetch(`/get-fare/?from=${from}&to=${to}&category=${category}&passengers=${passengers}`)
+          .then(res => res.json())
+          .then(data => fareField.value = `${data.fare} KES`);
+      }
+    }
+
+    categoryField.addEventListener('change', () => {
+      updateVisibility();
+      updateFare();
+    });
+    fromCounty.addEventListener('change', updateFare);
+    toCounty.addEventListener('change', updateFare);
+    numPassengers.addEventListener('input', updateFare);
+
+    updateVisibility();
+
+
+    document.getElementById('id_payment_method').addEventListener('change', function () {
+  const mpesaSection = document.getElementById('mpesa-section');
+  const confirmationSection = document.getElementById('confirmation-section');
+  if (this.value === 'mpesa') {
+    mpesaSection.style.display = 'block';
+    confirmationSection.style.display = 'block';
+  } else {
+    mpesaSection.style.display = 'none';
+    confirmationSection.style.display = 'none';
+  }
+});
+
+
+function initiateMpesa() {
+  const mpesaNum = document.getElementById('id_mpesa_number').value;
+  const fareValue = document.getElementById('fare').value.replace(' KES', '');
+
+  if (!mpesaNum || mpesaNum.length < 10) {
+    alert("Enter a valid Mpesa number");
+    return;
+  }
+
+  fetch("/api/initiate-payment/", {
+    method: "POST",
+    headers: {
+      "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value,
+      "Content-Type": "application/x-www-form-urlencoded"
+    },
+    body: new URLSearchParams({
+      phone: mpesaNum,
+      amount: fareValue
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.ResponseCode === "0") {
+      document.getElementById('stk-message').style.display = 'block';
+      alert("STK Push sent to your phone.");
+    } else {
+      alert("Error: " + JSON.stringify(data));
+    }
+  })
+  .catch(err => {
+    alert("Request failed: " + err);
+  });
+}
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,192 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contact Us | Pronghorn Travels</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+ <link rel="stylesheet" href="{% static 'booking/styles.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Top Contact Info Bar -->
+  <div class="top-contact-bar">
+    <div class="left-contact">
+      <i class="fas fa-envelope"></i> info@sprintupservices.co.ke
+      <i class="fas fa-phone"></i> +254 724 792140
+    </div>
+    <div class="right-icons">
+      <a href="#"><i class="fab fa-twitter"></i></a>
+      <a href="#"><i class="fab fa-facebook"></i></a>
+      <a href="#"><i class="fab fa-linkedin"></i></a>
+    </div>
+  </div>
+
+  <header class="main-header">
+    <div id="menuOverlay" class="overlay"></div>
+
+  <div class="logo">
+    <img src="{% static 'images/logo4.png' %}" alt="Sprintup Logo" />
+  </div>
+  <nav class="main-nav" id="navMenu">
+    <ul>
+      <li><a href="{% url 'home' %}" class="active">Home</a></li>
+      <li><a href="{% url 'about' %}">About Us</a></li>
+      <li><a href="{% url 'pricing' %}">Pricing</a></li>
+      <li><a href="{% url 'booking' %}">Booking</a></li>
+      <li><a href="{% url 'contactus' %}">Contact Us</a></li>
+    </ul>
+  </nav>
+  <div class="mobile-toggle" onclick="toggleMenu()">☰</div>
+</header><script>
+  function toggleMenu() {
+    const nav = document.getElementById("navMenu");
+    const overlay = document.getElementById("menuOverlay");
+    nav.classList.toggle("open");
+    overlay.classList.toggle("active");
+  }
+
+  // Close menu when link is clicked (on mobile)
+  document.querySelectorAll("#navMenu a").forEach(link => {
+    link.addEventListener("click", () => {
+      const nav = document.getElementById("navMenu");
+      const overlay = document.getElementById("menuOverlay");
+      nav.classList.remove("open");
+      overlay.classList.remove("active");
+    });
+  });
+</script>
+
+  <!-- Contact Section -->
+<section class="contact-section">
+  <div class="container">
+    <h2>Contact Us</h2>
+    <p>We’d love to hear from you. Fill out the form below or reach us through the provided contacts.</p>
+
+    <div class="contact-wrapper">
+      <form action="{% url 'contactus' %}" method="post" class="contact-form">
+    {% csrf_token %}
+        <div class="form-group">
+          <label for="name">Full Name</label>
+          <input type="text" id="name" name="name" required>
+        </div>
+
+        <div class="form-group">
+  <label for="phone">Phone Number</label>
+  <input type="tel" id="phone" name="phone" required>
+</div>
+
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" required>
+        </div>
+
+        <div class="form-group">
+          <label for="subject">Subject</label>
+          <input type="text" id="subject" name="subject" required>
+        </div>
+
+        <div class="form-group">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" rows="6" required></textarea>
+        </div>
+
+        <div class="form-submit">
+          <button type="submit" class="quote-btn">Send Message</button>
+        </div>
+      </form>
+
+      <div class="contact-info">
+        <h3>Get in Touch</h3>
+        <p><i class="fas fa-map-marker-alt"></i> Nairobi, Kenya</p>
+        <p><i class="fas fa-envelope"></i> support@kenyatravel.co.ke</p>
+        <p><i class="fas fa-phone"></i> +254 700 123456</p>
+        <p><i class="fas fa-clock"></i> Mon - Sat: 8:00am - 6:00pm</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+  <!-- Footer -->
+<footer style="background-color: #002f6c; color: white; padding: 40px 0; font-family: Arial, sans-serif;">
+  <div style="max-width: 1200px; margin: auto; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 30px; padding: 0 20px;">
+    
+    <!-- About Column -->
+    <div style="flex: 1 1 300px;">
+      <h3 style="color: #ff8c00;">Pronghorn Travels</h3>
+      <p>
+        We provide safe and affordable travels,digitized booking services 
+        serving major towns and cities in Kenya such as Nairobi,Kisumu,Eldoret,Nakuru.
+      </p>
+      <p>
+       <br>
+        Your journey starts with us.
+      
+          <a href="{% url 'booking' %}" class="quote-btn">Ticket</a>
+
+      </p>
+    </div>
+
+    <ul style="list-style: none; padding: 0;">
+  <li><a href="{% url 'booking' %}#to=nairobi" style="color: white; text-decoration: none;">Nairobi</a></li>
+  <li><a href="{% url 'booking' %}#to=eldoret" style="color: white; text-decoration: none;">Eldoret</a></li>
+  <li><a href="{% url 'booking' %}#to=kisumu" style="color: white; text-decoration: none;">Kisumu</a></li>
+  <li><a href="{% url 'booking' %}#to=kericho" style="color: white; text-decoration: none;">Kericho</a></li>
+  <li><a href="{% url 'booking' %}#to=nakuru" style="color: white; text-decoration: none;">Nakuru</a></li>
+</ul>
+
+
+    <!-- Contact Info -->
+    <div style="flex: 1 1 250px;">
+      <h3 style="color: #ff8c00;">Pronghorn Travels Contact</h3>
+      <ul style="list-style: none; padding: 0;">
+        <li><i class="fas fa-map-marker-alt"></i> Nairobi, Kenya</li>
+        <li><i class="fas fa-phone"></i> <a href="tel:+254700123456" style="color: white; text-decoration: none;">+254 700 123456</a></li>
+        <li><i class="fas fa-envelope"></i> <a href="mailto:support@sprintup.co.ke" style="color: white; text-decoration: none;">support@sprintup.co.ke</a></li>
+        <li><i class="fas fa-clock"></i> Mon - Sun: 6:00 AM - 10:00 PM</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Footer Bottom -->
+  <div style="text-align: center; padding: 20px 0; background-color: #1a1a1a;">
+    <p style="margin: 0; font-size: 14px;">© 2025 Pronghorn Travels. All Rights Reserved. | Designed by <a href="#" style="color: #ff8c00; text-decoration: none;">Cheruiyot Ruto</a></p>
+  </div>
+
+  <!-- Back to Top -->
+  <a href="#top" style="position: fixed; bottom: 20px; right: 20px; background-color: #ff8c00; color: white; padding: 10px 12px; border-radius: 50%; text-decoration: none;">
+    <i class="fas fa-chevron-up"></i>
+  </a>
+</footer>
+<!-- WhatsApp Floating Button -->
+<!-- WhatsApp Floating Button (Place just before </body>) -->
+<a 
+  href="https://wa.me/254724792140?text=Hello%20Sprintup%20Services!" 
+  target="_blank" 
+  style="
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    background-color: #25D366;
+    color: white;
+    padding: 12px 14px;
+    border-radius: 50%;
+    font-size: 24px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+  "
+>
+  <i class="fab fa-whatsapp"></i>
+</a>
+
+</body>
+</html>
