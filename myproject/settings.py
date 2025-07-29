@@ -96,7 +96,7 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 
 
 DATABASES = {
-    'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
+    'default': dj_database_url.config(default=os.environ.get('postgresql://booking_8e2w_user:pTT5uZj58ojYtUYL3kpE0iDNOL4ruF7z@dpg-d24a49h5pdvs7383qc80-a.oregon-postgres.render.com/booking_8e2w'))
 }
 
 
