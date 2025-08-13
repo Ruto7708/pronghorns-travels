@@ -95,15 +95,13 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 
+import dj_database_url
+import os
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'bookingf',       # database name
-        'USER': 'root',           # MySQL username
-        'PASSWORD': '',   # MySQL password (must match what you set in MySQL)
-        'HOST': '127.0.0.1',
-        'PORT': '3306',
-    }
+    'default': dj_database_url.config(
+        default=os.getenv('postgresql://booking_8e2w_user:pTT5uZj58ojYtUYL3kpE0iDNOL4ruF7z@dpg-d24a49h5pdvs7383qc80-a/booking_8e2w')
+    )
 }
 
 
