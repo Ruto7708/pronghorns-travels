@@ -7,7 +7,7 @@ from django.utils import timezone
 class ContactMessage(models.Model):
     name = models.CharField(max_length=255)
     phone = models.CharField(max_length=20) 
-    email = models.EmailField()
+    id = models.EmailField()
     subject = models.CharField(max_length=255)
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -39,7 +39,7 @@ class Booking(models.Model):
 
     full_name = models.CharField(max_length=100)
     phone_number = models.CharField(max_length=15)
-    email = models.EmailField()
+    id_number = models.CharField(max_length=10)
     from_county = models.CharField(max_length=100)
     to_county = models.CharField(max_length=100)
     category = models.CharField(max_length=10, choices=CATEGORY_CHOICES)
