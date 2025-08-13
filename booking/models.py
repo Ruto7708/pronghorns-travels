@@ -48,7 +48,7 @@ class Booking(models.Model):
     departure_date = models.DateField()
     departure_time = models.TimeField(default=timezone.now) 
     car_type = models.CharField(max_length=20, choices=CAR_CHOICES)
-    To_Pay_KES = models.DecimalField(max_digits=10, decimal_places=2)
+    To_Pay_KES = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     # payment_method = models.CharField(max_length=20, choices=PAYMENT_METHODS)
     # mpesa_number = models.CharField(max_length=15, blank=True)  # 🔹 New field for Mpesa number
     # payment_code = models.CharField(max_length=50, blank=True)
