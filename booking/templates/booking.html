@@ -140,7 +140,7 @@ button:hover {
 
   <div class="logo">
       <a href="{% url 'home' %}"></a>
-    <img src="{% static 'images/logo4.png' %}" alt="Sprintup Logo" />
+    <img src="{% static 'images/logoo.png' %}" alt="Sprintup Logo" />
   </div>
   <nav class="main-nav" id="navMenu">
     <ul>
@@ -171,8 +171,9 @@ button:hover {
   });
 </script><body>
   <h2>Travel Booking</h2>
-  <form method="post">
+  <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
+    
     {{ form.full_name.label_tag }} {{ form.full_name }}
     {{ form.phone_number.label_tag }} {{ form.phone_number }}
     {{ form.email.label_tag }} {{ form.email }}
@@ -208,21 +209,22 @@ button:hover {
 <label for="id_car_type">Type of Car</label>
 <select name="car_type" id="id_car_type">
   <option value="">Choose car type...</option>
-  <option value="Bus">Bus</option>
-  <option value="14 Seater">14 Seater</option>
+  <!-- <option value="Bus">Bus</option>
+  <option value="14 Seater">14 Seater</option> -->
   <option value="Wish">Wish</option>
   <option value="Noah">Noah</option>
-  <option value="Voxy">Voxy</option>
+  <!-- <option value="Voxy">Voxy</option> -->
 </select>
 
 <!-- 
     {{ form.departure_date.label_tag }} {{ form.departure_date }}
     {{ form.departure_time.label_tag }} {{ form.departure_time }} -->
 
-    <label for="fare">Fare (KES)</label>
-    <input type="text" id="fare" readonly>
+  <label for="To_Pay_KES">To Pay (KES)</label>
+<input type="text" name="To_Pay_KES" id="To_Pay_KES" readonly>
 
-    <div class="form-group">
+
+    <!-- <div class="form-group">
   <label for="id_payment_method">Payment Method</label>
   {{ form.payment_method }}
 </div>
@@ -237,7 +239,7 @@ button:hover {
 <div class="form-group" id="confirmation-section" style="display:none;">
   <label for="id_payment_code">Enter Confirmation Code</label>
   {{ form.payment_code }}
-</div>
+</div> -->
 
 
     <button type="submit">Submit Booking</button>
@@ -346,17 +348,19 @@ button:hover {
     }
 
     function updateFare() {
-      const from = fromCounty.value;
-      const to = toCounty.value;
-      const category = categoryField.value;
-      const passengers = category === 'Passenger' ? parseInt(numPassengers.value || '1') : 1;
+    const from = fromCounty.value;
+    const to = toCounty.value;
+    const category = categoryField.value;
+    const passengers = category === 'Passenger' ? parseInt(numPassengers.value || '1') : 1;
 
-      if (from && to && category) {
+    if (from && to && category) {
         fetch(`/get-fare/?from=${from}&to=${to}&category=${category}&passengers=${passengers}`)
-          .then(res => res.json())
-          .then(data => fareField.value = `${data.fare} KES`);
-      }
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById("To_Pay_KES").value = data.fare; // numeric only
+            });
     }
+}
 
     categoryField.addEventListener('change', () => {
       updateVisibility();
@@ -382,39 +386,39 @@ button:hover {
 });
 
 
-function initiateMpesa() {
-  const mpesaNum = document.getElementById('id_mpesa_number').value;
-  const fareValue = document.getElementById('fare').value.replace(' KES', '');
+// function initiateMpesa() {
+//   const mpesaNum = document.getElementById('id_mpesa_number').value;
+//   const fareValue = document.getElementById('fare').value.replace(' KES', '');
 
-  if (!mpesaNum || mpesaNum.length < 10) {
-    alert("Enter a valid Mpesa number");
-    return;
-  }
+//   if (!mpesaNum || mpesaNum.length < 10) {
+//     alert("Enter a valid Mpesa number");
+//     return;
+//   }
 
-  fetch("/api/initiate-payment/", {
-    method: "POST",
-    headers: {
-      "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value,
-      "Content-Type": "application/x-www-form-urlencoded"
-    },
-    body: new URLSearchParams({
-      phone: mpesaNum,
-      amount: fareValue
-    })
-  })
-  .then(res => res.json())
-  .then(data => {
-    if (data.ResponseCode === "0") {
-      document.getElementById('stk-message').style.display = 'block';
-      alert("STK Push sent to your phone.");
-    } else {
-      alert("Error: " + JSON.stringify(data));
-    }
-  })
-  .catch(err => {
-    alert("Request failed: " + err);
-  });
-}
+//   fetch("/api/initiate-payment/", {
+//     method: "POST",
+//     headers: {
+//       "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value,
+//       "Content-Type": "application/x-www-form-urlencoded"
+//     },
+//     body: new URLSearchParams({
+//       phone: mpesaNum,
+//       amount: fareValue
+//     })
+//   })
+//   .then(res => res.json())
+//   .then(data => {
+//     if (data.ResponseCode === "0") {
+//       document.getElementById('stk-message').style.display = 'block';
+//       alert("STK Push sent to your phone.");
+//     } else {
+//       alert("Error: " + JSON.stringify(data));
+//     }
+//   })
+//   .catch(err => {
+//     alert("Request failed: " + err);
+//   });
+// }
 
   </script>
 </body>
