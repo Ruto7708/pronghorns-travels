@@ -140,7 +140,7 @@ button:hover {
 
   <div class="logo">
       <a href="{% url 'home' %}"></a>
-    <img src="{% static 'images/logoo.png' %}" alt="Sprintup Logo" />
+    <img src="{% static 'images/logoo.png' %}" alt="Pronghorns Logo" />
   </div>
   <nav class="main-nav" id="navMenu">
     <ul>
@@ -176,7 +176,7 @@ button:hover {
     
     {{ form.full_name.label_tag }} {{ form.full_name }}
     {{ form.phone_number.label_tag }} {{ form.phone_number }}
-    {{ form.email.label_tag }} {{ form.email }}
+    {{ form.id_number.label_tag }} {{ form.id_number }}
 
     {{ form.from_county.label_tag }} {{ form.from_county }}
     {{ form.to_county.label_tag }} {{ form.to_county }}
