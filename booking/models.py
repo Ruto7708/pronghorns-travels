@@ -39,7 +39,7 @@ class Booking(models.Model):
 
     full_name = models.CharField(max_length=100)
     phone_number = models.CharField(max_length=15)
-    id_number = models.IntegerField(default=40090973)
+    id_number = models.IntegerField(default=---)
     from_county = models.CharField(max_length=100)
     to_county = models.CharField(max_length=100)
     category = models.CharField(max_length=10, choices=CATEGORY_CHOICES)
