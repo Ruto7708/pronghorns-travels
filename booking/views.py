@@ -90,29 +90,107 @@ def success_with_receipt(request, booking_id):
 
 
 
-import io
-from django.http import FileResponse, Http404
-from django.template.loader import get_template
-from xhtml2pdf import pisa
+# views.py
+from django.http import HttpResponse
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image
+from reportlab.lib.pagesizes import A4
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet
+from django.shortcuts import get_object_or_404
+import os
+from .models import Booking
+
+def build_ticket_section(booking, copy_type="Passenger Copy"):
+    """Build one half of the ticket (company or passenger copy)."""
+    styles = getSampleStyleSheet()
+    section = []
+
+    # Title
+    title = Paragraph(f"<b>Pronghorn Travels - Booking Ticket ({copy_type})</b>", styles["Heading2"])
+    section.append(title)
+    section.append(Spacer(1, 12))
+
+    # Booking details
+    data = [
+        ["Booking ID", booking.id],
+        ["Full Name", booking.full_name],
+        ["Phone Number", booking.phone_number],
+        ["Email", booking.email or "-"],
+        ["Category", booking.category],
+        ["Car Type", booking.car_type],
+        ["From", booking.from_county],
+        ["To", booking.to_county],
+        ["Passengers", booking.num_passengers or "-"],
+        ["Parcel Weight", booking.parcel_weight or "-"],
+        ["Total Fare", f"KES {booking.To_Pay_KES}"],
+        ["Date", booking.created_at.strftime("%d %b %Y %H:%M")],
+    ]
+
+    table = Table(data, colWidths=[150, 250])
+    table.setStyle(TableStyle([
+        ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#3498db")),
+        ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
+        ("ALIGN", (0, 0), (-1, -1), "LEFT"),
+        ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+        ("FONTSIZE", (0, 0), (-1, 0), 12),
+        ("BOTTOMPADDING", (0, 0), (-1, 0), 10),
+        ("BACKGROUND", (0, 1), (-1, -1), colors.whitesmoke),
+        ("GRID", (0, 0), (-1, -1), 0.5, colors.grey),
+        ("FONTNAME", (0, 1), (-1, -1), "Helvetica"),
+        ("FONTSIZE", (0, 1), (-1, -1), 10),
+    ]))
+    section.append(table)
+    section.append(Spacer(1, 15))
+
+    # Footer
+    footer = Paragraph(
+        "<i>Thank you for choosing Pronghorn Travels. Have a safe journey!</i>",
+        styles["Normal"]
+    )
+    section.append(footer)
+
+    return section
+
 
 def download_receipt(request, booking_id):
-    try:
-        booking = Booking.objects.get(id=booking_id)
-    except Booking.DoesNotExist:
-        raise Http404("Booking not found.")
+    booking = get_object_or_404(Booking, id=booking_id)
 
-    template = get_template('receipt_template.html')
-    html = template.render({'booking': booking})
+    # Response settings
+    response = HttpResponse(content_type="application/pdf")
+    response["Content-Disposition"] = f'attachment; filename="ticket_{booking.id}.pdf"'
 
-    result = io.BytesIO()
-    pisa_status = pisa.CreatePDF(html, dest=result)
-    if pisa_status.err:
-        return HttpResponse('Error generating receipt', status=500)
+    # Document setup
+    doc = SimpleDocTemplate(response, pagesize=A4,
+                            rightMargin=40, leftMargin=40,
+                            topMargin=40, bottomMargin=40)
 
-    result.seek(0)
-    return FileResponse(result, as_attachment=True, filename=f"receipt_{booking.id}.pdf")
+    story = []
 
+    # Company Logo (if exists)
+    logo_path = os.path.join("static", "images", "logoo.png")
+    if os.path.exists(logo_path):
+        story.append(Image(logo_path, width=100, height=60))
+        story.append(Spacer(1, 12))
 
+    # Build two ticket sections
+    story.extend(build_ticket_section(booking, "Company Copy"))
+
+    # Add dotted cut line
+    cutline = Paragraph(
+        '<para alignment="center">------------------------------------- '
+        '✂ CUT HERE ✂ '
+        '-------------------------------------</para>',
+        getSampleStyleSheet()["Normal"]
+    )
+    story.append(Spacer(1, 20))
+    story.append(cutline)
+    story.append(Spacer(1, 20))
+
+    story.extend(build_ticket_section(booking, "Passenger Copy"))
+
+    # Build document
+    doc.build(story)
+    return response
 
 
 
