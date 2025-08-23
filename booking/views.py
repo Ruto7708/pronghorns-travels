@@ -25,7 +25,7 @@ from django.core.files.storage import FileSystemStorage
 from django.shortcuts import render
 from .forms import BookingForm
 from .models import Booking
-from .fare_data import county_distances, FARE_PER_KM   # assuming you have fare logic here
+
 
 def booking(request):
     booking_instance = None  # store the new booking
