@@ -136,7 +136,7 @@ def build_ticket_section(booking, copy_type="Passenger Copy"):
         ["Passengers", booking.num_passengers or "-"],
         ["Parcel Weight", booking.parcel_weight or "-"],
         ["Total Fare", f"KES {booking.To_Pay_KES}"],
-        ["Date", booking.created_at.strftime("%d %b %Y %H:%M")],
+        
     ]
 
     table = Table(data, colWidths=[150, 250])
