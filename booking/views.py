@@ -128,7 +128,7 @@ def build_ticket_section(booking, copy_type="Passenger Copy"):
         ["Booking ID", booking.id],
         ["Full Name", booking.full_name],
         ["Phone Number", booking.phone_number],
-        ["Email", booking.email or "-"],
+        ["ID Number", booking.id_number],
         ["Category", booking.category],
         ["Car Type", booking.car_type],
         ["From", booking.from_county],
