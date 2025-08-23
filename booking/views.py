@@ -21,7 +21,15 @@ from .distance_data import county_distances
 
 FARE_PER_KM = 5  # Adjust this rate as needed
 
+from django.core.files.storage import FileSystemStorage
+from django.shortcuts import render
+from .forms import BookingForm
+from .models import Booking
+from .fare_data import county_distances, FARE_PER_KM   # assuming you have fare logic here
+
 def booking(request):
+    booking_instance = None  # store the new booking
+    
     if request.method == "POST":
         form = BookingForm(request.POST, request.FILES)
         if form.is_valid():
@@ -36,14 +44,14 @@ def booking(request):
             from_county = request.POST.get('from_county')
             to_county = request.POST.get('to_county')
 
-            # Calculate fare
+            # ✅ Calculate fare
             distance = county_distances.get(from_county, {}).get(to_county, 0)
             fare = distance * FARE_PER_KM
 
             if booking_instance.category == "Passenger" and booking_instance.num_passengers > 1:
                 fare *= booking_instance.num_passengers
 
-            booking_instance.To_Pay_KES = fare  # ✅ Ensure this is saved so form validates
+            booking_instance.To_Pay_KES = fare  
 
             booking_instance.save()
 
@@ -56,11 +64,16 @@ def booking(request):
             else:
                 file_url = ""
 
-            # ✅ Pass booking ID to success page so we can display/download receipt
-            return redirect('success_with_receipt', booking_id=booking_instance.id)
+            # ✅ Instead of redirect → render same page with booking info
+            return render(request, 'booking.html', {
+                'form': BookingForm(),   # empty form for new bookings
+                'booking': booking_instance,  # pass booking for receipt
+                'file_url': file_url
+            })
 
         else:
             print("Form errors:", form.errors)
+
     else:
         form = BookingForm()
 
