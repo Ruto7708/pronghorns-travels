@@ -245,6 +245,32 @@ button:hover {
     <button type="submit">Submit Booking</button>
   </form>
 
+  <!-- Receipt Section -->
+{% if booking %}
+<div id="receipt" style="margin-top:40px; padding:20px; border:1px solid #ddd; background:#fff;">
+  <h2 style="text-align:center;">Booking Receipt</h2>
+  <p><strong>Booking ID:</strong> {{ booking.id }}</p>
+  <p><strong>Full Name:</strong> {{ booking.full_name }}</p>
+  <p><strong>Phone:</strong> {{ booking.phone_number }}</p>
+  <p><strong>Email:</strong> {{ booking.email }}</p>
+  <p><strong>Category:</strong> {{ booking.category }}</p>
+  <p><strong>Car Type:</strong> {{ booking.car_type }}</p>
+  <p><strong>From:</strong> {{ booking.from_county }}</p>
+  <p><strong>To:</strong> {{ booking.to_county }}</p>
+  <p><strong>Passengers:</strong> {{ booking.num_passengers }}</p>
+  <p><strong>Parcel Weight:</strong> {{ booking.parcel_weight }}</p>
+  <p><strong>To Pay:</strong> KES {{ booking.To_Pay_KES }}</p>
+  <p><strong>Date:</strong> {{ booking.created_at|date:"d M Y H:i" }}</p>
+
+  <!-- Download Button -->
+ <a href="{% url 'download_receipt' booking.id %}" class="btn btn-success"
+   style="padding:10px 15px; background:#3498db; color:#fff; border-radius:5px; text-decoration:none;">
+   Download PDF Receipt
+</a>
+
+</div>
+{% endif %}
+
 
   
   <!-- Footer -->
@@ -384,6 +410,16 @@ button:hover {
     confirmationSection.style.display = 'none';
   }
 });
+
+    function downloadReceipt() {
+  const receiptContent = document.getElementById("receipt").innerHTML;
+  const win = window.open("", "", "height=700,width=700");
+  win.document.write("<html><head><title>Booking Receipt</title></head><body>");
+  win.document.write(receiptContent);
+  win.document.write("</body></html>");
+  win.document.close();
+  win.print();
+}
 
 
 // function initiateMpesa() {
